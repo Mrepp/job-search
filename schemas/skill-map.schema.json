@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skill-map.schema.json",
+  "title": "Skill Map",
+  "description": "Schema for career skill map JSON file",
+  "type": "object",
+  "required": ["generated_date", "skill_inventory"],
+  "properties": {
+    "generated_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of generation"
+    },
+    "profile_hash": {
+      "type": "string",
+      "description": "Hash of user profile used for generation"
+    },
+    "skill_inventory": {
+      "type": "object",
+      "description": "Categorized skills inventory",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "level"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "level": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3,
+              "description": "Skill level: 0=None, 1=Basic, 2=Proficient, 3=Expert"
+            },
+            "years": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "properties": {
+        "programming_languages": { "type": "array" },
+        "infrastructure": { "type": "array" },
+        "databases": { "type": "array" },
+        "tools": { "type": "array" },
+        "soft_skills": { "type": "array" }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["skill", "current_level", "target_level", "priority"],
+        "properties": {
+          "skill": {
+            "type": "string",
+            "minLength": 1
+          },
+          "current_level": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "target_level": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["P0", "P1", "P2", "P3"],
+            "description": "Priority: P0=Critical, P1=High, P2=Medium, P3=Low"
+          },
+          "effort": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "timeline": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["not_started", "in_progress", "completed"],
+            "default": "not_started"
+          }
+        }
+      }
+    },
+    "learning_plans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "skill": { "type": "string" },
+          "resources": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "milestones": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "progress_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date", "skill", "action"],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "skill": { "type": "string" },
+          "action": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

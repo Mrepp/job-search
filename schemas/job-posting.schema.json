@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "job-posting.schema.json",
+  "title": "Job Posting File",
+  "description": "Schema for job posting markdown files",
+  "type": "object",
+  "required": ["sections", "valid_statuses"],
+  "properties": {
+    "valid_statuses": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["interested", "applied", "interviewed", "offered", "rejected"]
+      },
+      "description": "Valid job status directories"
+    },
+    "sections": {
+      "type": "object",
+      "required": [
+        "title",
+        "overview",
+        "profile_match_analysis",
+        "requirements",
+        "status_history"
+      ],
+      "properties": {
+        "title": {
+          "type": "object",
+          "required": ["pattern"],
+          "properties": {
+            "pattern": {
+              "const": "^# .+ at .+$",
+              "description": "H1 heading with title and company"
+            }
+          }
+        },
+        "overview": {
+          "type": "object",
+          "required": ["heading", "fields"],
+          "properties": {
+            "heading": {
+              "const": "## Overview"
+            },
+            "fields": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["Location", "Type", "Remote", "Salary", "Posted", "Source"]
+              },
+              "minItems": 2,
+              "description": "Required fields in overview section"
+            }
+          }
+        },
+        "profile_match_analysis": {
+          "type": "object",
+          "required": ["heading", "score_range", "breakdown_categories"],
+          "properties": {
+            "heading": {
+              "const": "## Profile Match Analysis"
+            },
+            "score_range": {
+              "type": "object",
+              "properties": {
+                "min": { "const": 0 },
+                "max": { "const": 100 }
+              }
+            },
+            "breakdown_categories": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "max_points"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "enum": ["Title Match", "Location", "Skills", "Experience", "Salary"]
+                  },
+                  "max_points": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "description": "Score breakdown: Title(20), Location(20), Skills(30), Experience(15), Salary(15)"
+            }
+          }
+        },
+        "requirements": {
+          "type": "object",
+          "required": ["heading"],
+          "properties": {
+            "heading": {
+              "const": "## Requirements"
+            },
+            "subsections": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["### Required", "### Preferred"]
+              }
+            }
+          }
+        },
+        "status_history": {
+          "type": "object",
+          "required": ["heading"],
+          "properties": {
+            "heading": {
+              "const": "## Status History"
+            },
+            "entry_format": {
+              "const": "- **YYYY-MM-DD**: Status - Notes",
+              "description": "Format for status history entries"
+            }
+          }
+        }
+      }
+    },
+    "optional_sections": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "## Alignment",
+          "## Gaps",
+          "## Talking Points",
+          "## Responsibilities",
+          "## Company Context",
+          "## Application",
+          "## Notes"
+        ]
+      }
+    },
+    "validation_rules": {
+      "type": "object",
+      "properties": {
+        "status_matches_directory": {
+          "const": true,
+          "description": "File must be in directory matching its status"
+        },
+        "score_sum_tolerance": {
+          "const": 2,
+          "description": "Allowed difference between breakdown sum and total score"
+        },
+        "valid_status_transitions": {
+          "type": "object",
+          "properties": {
+            "interested": ["applied", "rejected"],
+            "applied": ["interviewed", "rejected"],
+            "interviewed": ["offered", "rejected", "interviewed"],
+            "offered": ["rejected"],
+            "rejected": []
+          },
+          "description": "Valid transitions from each status"
+        }
+      }
+    }
+  }
+}

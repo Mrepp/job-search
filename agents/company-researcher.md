@@ -8,7 +8,7 @@ This agent performs multi-step web research to build a complete picture of a com
 
 ## Invocation
 
-This agent is invoked by the `/find-company` command.
+This agent is invoked by the `/job-search:find-company` command.
 
 ## Research Process
 

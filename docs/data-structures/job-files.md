@@ -366,8 +366,8 @@ engineering culture and high bar for talent.
 
 ## File Lifecycle
 
-1. **Created** via `/ingest-job` or `/find-job-postings`
+1. **Created** via `/job-search:ingest-job` or `/job-search:find-job-postings`
 2. **Analyzed** with match scoring and gap analysis
-3. **Updated** via `/update-job-status` as you progress
+3. **Updated** via `/job-search:update-job-status` as you progress
 4. **Moved** between directories as status changes
 5. **Archived** in `rejected/` or used for offer comparison

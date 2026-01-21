@@ -7,7 +7,7 @@ Your profile is the foundation for personalized job matching and career planning
 Run the personal analysis command:
 
 ```
-/personal-analysis
+/job-search:personal-analysis
 ```
 
 ## Information Collected
@@ -76,7 +76,7 @@ Your profile is saved in `self/`:
 self/
 ├── user.json              # Core profile data
 ├── resume/
-│   ├── master-resume.md   # Your main resume
+│   ├── main-resume.md   # Your main resume
 │   └── tailored/          # Job-specific versions
 ├── experience/
 │   └── {company}-{title}.md
@@ -132,7 +132,7 @@ You: Adjust AWS to 3, I use it extensively
 
 ## Updating Your Profile
 
-Run `/personal-analysis` again to:
+Run `/job-search:personal-analysis` again to:
 
 - Update existing information
 - Add new skills

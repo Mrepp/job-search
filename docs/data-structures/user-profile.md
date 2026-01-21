@@ -158,7 +158,7 @@ Your profile is stored in `self/user.json` and contains all the information used
 self/
 ├── user.json              # Core profile (this file)
 ├── resume/
-│   ├── master-resume.md   # Primary resume
+│   ├── main-resume.md   # Primary resume
 │   └── tailored/          # Job-specific resumes
 │       └── {company}-{title}.md
 ├── experience/
@@ -254,7 +254,7 @@ When viewing a job analysis:
 
 ## Updating Your Profile
 
-Use `/personal-analysis` to:
+Use `/job-search:personal-analysis` to:
 - Update any field
 - Add or modify skills
 - Adjust confidence levels

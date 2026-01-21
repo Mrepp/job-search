@@ -56,7 +56,7 @@ This command creates or updates your professional profile, which is used by all 
    - Create `self/experience/` entries for each job
    - Create `self/education/` entries for each degree
    - Create `self/projects/` entries for notable projects
-   - Save resume to `self/resume/master-resume.md`
+   - Save resume to `self/resume/main-resume.md`
 
 ### For Existing Users
 
@@ -75,7 +75,7 @@ This command creates or updates your professional profile, which is used by all 
 self/
 ├── user.json
 ├── resume/
-│   ├── master-resume.md
+│   ├── main-resume.md
 │   └── tailored/
 ├── projects/
 │   └── {project-name}.md

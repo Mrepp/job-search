@@ -1,0 +1,140 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "company.schema.json",
+  "title": "Company Research File",
+  "description": "Schema for company research markdown files",
+  "type": "object",
+  "required": ["sections"],
+  "properties": {
+    "sections": {
+      "type": "object",
+      "required": [
+        "title",
+        "overview",
+        "company_description",
+        "culture_analysis",
+        "relevance_score",
+        "research_date"
+      ],
+      "properties": {
+        "title": {
+          "type": "object",
+          "required": ["pattern"],
+          "properties": {
+            "pattern": {
+              "const": "^# .+$",
+              "description": "H1 heading with company name"
+            }
+          }
+        },
+        "overview": {
+          "type": "object",
+          "required": ["heading", "fields"],
+          "properties": {
+            "heading": {
+              "const": "## Overview"
+            },
+            "fields": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["Industry", "Size", "Location", "Founded", "Status"]
+              },
+              "minItems": 3,
+              "description": "Required fields in overview section"
+            }
+          }
+        },
+        "company_description": {
+          "type": "object",
+          "required": ["heading"],
+          "properties": {
+            "heading": {
+              "const": "## Company Description"
+            }
+          }
+        },
+        "culture_analysis": {
+          "type": "object",
+          "required": ["heading"],
+          "properties": {
+            "heading": {
+              "const": "## Culture Analysis"
+            }
+          }
+        },
+        "relevance_score": {
+          "type": "object",
+          "required": ["heading_pattern", "score_range", "breakdown_categories"],
+          "properties": {
+            "heading_pattern": {
+              "const": "^## Relevance Score: (\\d+)/100$",
+              "description": "Score heading with value 0-100"
+            },
+            "score_range": {
+              "type": "object",
+              "properties": {
+                "min": { "const": 0 },
+                "max": { "const": 100 }
+              }
+            },
+            "breakdown_categories": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["Location Match", "Industry Match", "Skills Match", "Culture Match"]
+              },
+              "minItems": 4,
+              "maxItems": 4,
+              "description": "Score breakdown categories (each 0-25 points)"
+            },
+            "category_max": {
+              "const": 25,
+              "description": "Maximum points per category"
+            }
+          }
+        },
+        "research_date": {
+          "type": "object",
+          "required": ["heading"],
+          "properties": {
+            "heading": {
+              "const": "## Research Date"
+            },
+            "format": {
+              "const": "ISO 8601",
+              "description": "Date format (YYYY-MM-DD)"
+            }
+          }
+        }
+      }
+    },
+    "optional_sections": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "## Employee Sentiment",
+          "## Tech Stack",
+          "## Benefits & Perks",
+          "## Red Flags",
+          "## Open Positions",
+          "## Sources"
+        ]
+      }
+    },
+    "validation_rules": {
+      "type": "object",
+      "properties": {
+        "score_sum_tolerance": {
+          "const": 2,
+          "description": "Allowed difference between breakdown sum and total score"
+        },
+        "profile_hash_required": {
+          "const": true,
+          "description": "Profile hash must be present for staleness tracking"
+        }
+      }
+    }
+  }
+}

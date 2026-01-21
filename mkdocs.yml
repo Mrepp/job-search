@@ -6,9 +6,21 @@ nav:
   - Home: index.md
   - Getting Started:
     - Installation: getting-started/installation.md
+    - Initial Setup: getting-started/setup.md
     - Quick Start: getting-started/quick-start.md
     - Setting Up Profile: getting-started/profile-setup.md
+
+  # User Research
+  - My Research:
+    - Dashboard: research/dashboard.md
+    - Companies: research/companies/index.md
+    - Job Pipeline: research/jobs/pipeline.md
+    - Skills: research/career/skills.md
+    - Career Paths: research/career/paths.md
+
   - Commands:
+    - Setup: commands/setup.md
+    - Documentation: commands/docs.md
     - Personal Analysis: commands/personal-analysis.md
     - Find Company: commands/find-company.md
     - Find Position: commands/find-position.md

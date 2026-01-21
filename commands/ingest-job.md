@@ -5,16 +5,16 @@ Add a job posting from a URL or pasted content for analysis and tracking.
 ## Usage
 
 ```
-/ingest-job [url]
-/ingest-job [paste job description]
+/job-search:ingest-job [url]
+/job-search:ingest-job [paste job description]
 ```
 
 ## Examples
 
 ```
-/ingest-job https://boards.greenhouse.io/company/jobs/12345
-/ingest-job https://jobs.lever.co/company/abc123
-/ingest-job
+/job-search:ingest-job https://boards.greenhouse.io/company/jobs/12345
+/job-search:ingest-job https://jobs.lever.co/company/abc123
+/job-search:ingest-job
 
 (Then paste the job description when prompted)
 ```
@@ -71,7 +71,7 @@ Parse the content to extract:
 
 Look in `/companies/` for existing research:
 - If company exists: Load and reference
-- If company doesn't exist: Offer to run `/find-company`
+- If company doesn't exist: Offer to run `/job-search:find-company`
 
 ### 4. Load User Profile
 

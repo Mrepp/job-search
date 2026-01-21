@@ -43,14 +43,14 @@ After installation, your plugins directory should look like:
 1. Start Claude Code
 2. Run `/help` to see available commands
 3. You should see the job-search commands listed:
-   - `/personal-analysis`
-   - `/find-company`
-   - `/find-position`
-   - `/find-job-postings`
-   - `/ingest-job`
-   - `/update-job-status`
-   - `/skill-builder`
-   - `/tailor-resume`
+   - `/job-search:personal-analysis`
+   - `/job-search:find-company`
+   - `/job-search:find-position`
+   - `/job-search:find-job-postings`
+   - `/job-search:ingest-job`
+   - `/job-search:update-job-status`
+   - `/job-search:skill-builder`
+   - `/job-search:tailor-resume`
 
 ## Creating Your Workspace
 

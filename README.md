@@ -20,14 +20,17 @@ A comprehensive Claude Code plugin to assist users in finding their ideal job th
 
 | Command | Description |
 |---------|-------------|
-| `/personal-analysis` | Build and maintain your user profile |
-| `/find-company [criteria]` | Research companies by area, industry, culture |
-| `/find-position [role]` | Identify career positions for your skills |
-| `/find-job-postings [role] [location]` | Discover ranked job postings |
-| `/ingest-job [url or paste]` | Add a job posting for analysis |
-| `/update-job-status [job] [status]` | Move jobs through the application pipeline |
-| `/skill-builder` | Map skills, identify gaps, create improvement plans |
-| `/tailor-resume [job-file]` | Generate a tailored resume for a job |
+| `/job-search:setup` | Initialize workspace and create quick profile from resume |
+| `/job-search:docs` | Browse documentation and research in web browser |
+| `/job-search:personal-analysis` | Build and maintain your user profile |
+| `/job-search:find-company [criteria]` | Research companies by area, industry, culture |
+| `/job-search:find-position [role]` | Identify career positions for your skills |
+| `/job-search:find-job-postings [role] [location]` | Discover ranked job postings |
+| `/job-search:ingest-job [url or paste]` | Add a job posting for analysis |
+| `/job-search:update-job-status [job] [status]` | Move jobs through the application pipeline |
+| `/job-search:skill-builder` | Map skills, identify gaps, create improvement plans |
+| `/job-search:tailor-resume [job-file]` | Generate a tailored resume for a job |
+| `/job-search:resume` | Manage and export resumes to PDF and other formats |
 
 ## Data Structure
 
@@ -38,8 +41,9 @@ The plugin stores all data in your working directory:
 ├── self/
 │   ├── user.json              # Your profile
 │   ├── resume/
-│   │   ├── master-resume.md   # Primary resume
-│   │   └── tailored/          # Job-specific versions
+│   │   ├── main-resume.md     # Primary resume
+│   │   ├── tailored/          # Job-specific versions
+│   │   └── exports/           # PDF/HTML/DOCX exports
 │   ├── projects/              # Project descriptions
 │   ├── education/             # Education history
 │   ├── experience/            # Work experience
@@ -57,13 +61,65 @@ The plugin stores all data in your working directory:
     └── skill-map.json         # Skill inventory
 ```
 
+## Installation Guide
+
+### Prerequisites
+
+- [Claude Code CLI](https://github.com/anthropics/claude-code) installed and configured
+- Node.js 18+ (for Claude Code)
+
+### Installing the Plugin
+
+1. **Locate your Claude Code plugins directory**
+
+   Claude Code looks for plugins in `~/.claude/plugins/` by default.
+
+2. **Clone or copy this plugin**
+
+   ```bash
+   # Option 1: Clone directly into plugins directory
+   git clone <repository-url> ~/.claude/plugins/job-search
+
+   # Option 2: Copy from current location
+   cp -r /path/to/job-search ~/.claude/plugins/
+   ```
+
+3. **Verify installation**
+
+   Restart Claude Code or start a new session. The plugin commands (like `/job-search:setup`, `/job-search:find-job-postings`, etc.) will be available automatically.
+
+### Alternative: Project-Local Installation
+
+You can also install the plugin locally within a specific project:
+
+```bash
+# Create a .claude/plugins directory in your project
+mkdir -p .claude/plugins
+
+# Copy the plugin there
+cp -r /path/to/job-search .claude/plugins/
+```
+
+This makes the plugin available only when working in that project directory.
+
+### Verifying the Plugin Works
+
+Run any plugin command to verify installation:
+
+```bash
+/job-search:setup
+```
+
+If the command is recognized, the plugin is installed correctly.
+
 ## Getting Started
 
-1. Run `/personal-analysis` to create your profile
-2. Use `/find-company` or `/find-job-postings` to discover opportunities
-3. Use `/ingest-job` to add specific postings you find
-4. Track applications with `/update-job-status`
-5. Build skills with `/skill-builder`
+1. Run `/job-search:setup` to initialize your workspace and create your profile
+2. Run `/job-search:docs` to browse documentation in your browser
+3. Use `/job-search:find-company` or `/job-search:find-job-postings` to discover opportunities
+4. Use `/job-search:ingest-job` to add specific postings you find
+5. Track applications with `/job-search:update-job-status`
+6. Build skills with `/job-search:skill-builder`
 
 ## Application Pipeline
 

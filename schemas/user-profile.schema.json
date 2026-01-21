@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "user-profile.schema.json",
+  "title": "User Profile",
+  "description": "Schema for job search user profile",
+  "type": "object",
+  "required": ["name", "email", "skills", "target_titles"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "User's full name"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "User's email address"
+    },
+    "location": {
+      "type": "string",
+      "description": "User's location (city, state/country)"
+    },
+    "remote_preference": {
+      "type": "string",
+      "enum": ["remote", "hybrid", "onsite", "flexible"],
+      "description": "Work arrangement preference"
+    },
+    "experience_years": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total years of professional experience"
+    },
+    "current_title": {
+      "type": "string",
+      "description": "Current job title"
+    },
+    "target_titles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "Job titles being targeted"
+    },
+    "target_industries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Industries of interest"
+    },
+    "salary_expectations": {
+      "type": "object",
+      "properties": {
+        "minimum": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Minimum acceptable salary"
+        },
+        "target": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Target salary"
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD",
+          "description": "Currency for salary values"
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "confidence"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Skill name"
+          },
+          "confidence": {
+            "type": "integer",
+            "enum": [1, 2, 3],
+            "description": "Confidence level: 1=Basic, 2=Proficient, 3=Expert"
+          },
+          "years": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Years of experience with this skill"
+          }
+        }
+      },
+      "minItems": 1,
+      "description": "List of skills with confidence levels"
+    },
+    "profile_hash": {
+      "type": "string",
+      "description": "Deterministic hash for tracking profile changes"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last update"
+    }
+  },
+  "additionalProperties": true
+}

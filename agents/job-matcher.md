@@ -9,8 +9,8 @@ This agent analyzes job postings and calculates detailed match scores, providing
 ## Invocation
 
 This agent is used by:
-- `/find-job-postings` command
-- `/ingest-job` command
+- `/job-search:find-job-postings` command
+- `/job-search:ingest-job` command
 
 ## Scoring Methodology
 

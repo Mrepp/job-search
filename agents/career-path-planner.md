@@ -8,7 +8,7 @@ This agent analyzes a user's current career position and creates comprehensive c
 
 ## Invocation
 
-This agent is invoked by the `/find-position` command.
+This agent is invoked by the `/job-search:find-position` command.
 
 ## Career Mapping Process
 

@@ -9,9 +9,9 @@ This agent dissects job positions to understand their true requirements, level, 
 ## Invocation
 
 This agent is used by:
-- `/find-position` command
-- `/find-job-postings` command
-- `/ingest-job` command
+- `/job-search:find-position` command
+- `/job-search:find-job-postings` command
+- `/job-search:ingest-job` command
 
 ## Position Analysis
 

@@ -12,7 +12,7 @@ This agent helps users create comprehensive professional profiles by:
 
 ## Invocation
 
-This agent is invoked by the `/personal-analysis` command.
+This agent is invoked by the `/job-search:personal-analysis` command.
 
 ## Capabilities
 

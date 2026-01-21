@@ -15,46 +15,55 @@ The Job Search Assistant helps you navigate your job search with AI-powered tool
 
 ## Quick Start
 
-1. **Set up your profile**
+1. **Initialize your workspace**
    ```
-   /personal-analysis
+   /job-search:setup
+   ```
+   This analyzes your resume, creates your profile, and sets up your workspace.
+
+2. **Browse documentation**
+   ```
+   /job-search:docs
+   ```
+   Opens a web-based documentation browser with your research.
+
+3. **Research companies**
+   ```
+   /job-search:find-company Stripe
+   /job-search:find-company "fintech startups in SF"
    ```
 
-2. **Research companies**
+4. **Discover jobs**
    ```
-   /find-company Stripe
-   /find-company "fintech startups in SF"
-   ```
-
-3. **Discover jobs**
-   ```
-   /find-job-postings senior software engineer
+   /job-search:find-job-postings senior software engineer
    ```
 
-4. **Track applications**
+5. **Track applications**
    ```
-   /ingest-job https://example.com/job
-   /update-job-status stripe-engineer applied
+   /job-search:ingest-job https://example.com/job
+   /job-search:update-job-status stripe-engineer applied
    ```
 
-5. **Plan your career**
+6. **Plan your career**
    ```
-   /find-position staff engineer
-   /skill-builder
+   /job-search:find-position staff engineer
+   /job-search:skill-builder
    ```
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `/personal-analysis` | Build and maintain your profile |
-| `/find-company` | Research companies |
-| `/find-position` | Map career paths |
-| `/find-job-postings` | Discover matching jobs |
-| `/ingest-job` | Add job from URL or paste |
-| `/update-job-status` | Track application progress |
-| `/skill-builder` | Analyze skill gaps |
-| `/tailor-resume` | Customize resume for a job |
+| `/job-search:setup` | Initialize workspace and profile from resume |
+| `/job-search:docs` | Browse documentation and research in browser |
+| `/job-search:personal-analysis` | Build and maintain your profile |
+| `/job-search:find-company` | Research companies |
+| `/job-search:find-position` | Map career paths |
+| `/job-search:find-job-postings` | Discover matching jobs |
+| `/job-search:ingest-job` | Add job from URL or paste |
+| `/job-search:update-job-status` | Track application progress |
+| `/job-search:skill-builder` | Analyze skill gaps |
+| `/job-search:tailor-resume` | Customize resume for a job |
 
 ## Data Storage
 
@@ -76,5 +85,6 @@ your-directory/
 ## Getting Help
 
 - See [Installation](getting-started/installation.md) for setup instructions
+- Run [/job-search:setup](getting-started/setup.md) to initialize your workspace
 - Check [Quick Start](getting-started/quick-start.md) for a walkthrough
-- Browse [Commands](commands/personal-analysis.md) for detailed documentation
+- Browse [Commands](commands/setup.md) for detailed documentation

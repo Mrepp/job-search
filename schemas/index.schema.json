@@ -1,0 +1,322 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://job-search.plugin/schemas/index.schema.json",
+  "title": "Job Search Workspace Index",
+  "description": "Master index file tracking all research data in the workspace (index.json)",
+  "type": "object",
+  "required": ["version", "created", "categories"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Schema version for the index format"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the index was created"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last index update"
+    },
+    "workspace_path": {
+      "type": "string",
+      "description": "Absolute path to the workspace directory"
+    },
+    "profile_summary": {
+      "type": "object",
+      "description": "Summary of the user profile from self/user.json",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "User's name"
+        },
+        "current_title": {
+          "type": "string",
+          "description": "User's current job title"
+        },
+        "skill_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of mapped skills"
+        },
+        "profile_type": {
+          "type": "string",
+          "enum": ["quick", "full"],
+          "description": "Type of profile: quick or full"
+        },
+        "profile_hash": {
+          "type": "string",
+          "description": "Hash of the profile for change detection"
+        }
+      }
+    },
+    "categories": {
+      "type": "object",
+      "description": "Categorized index of all tracked items",
+      "required": ["companies", "jobs"],
+      "properties": {
+        "companies": {
+          "$ref": "#/definitions/categoryList",
+          "description": "Index of researched companies"
+        },
+        "jobs": {
+          "type": "object",
+          "description": "Jobs organized by application status",
+          "properties": {
+            "interested": {
+              "$ref": "#/definitions/categoryList"
+            },
+            "applied": {
+              "$ref": "#/definitions/categoryList"
+            },
+            "interviewed": {
+              "$ref": "#/definitions/categoryList"
+            },
+            "offered": {
+              "$ref": "#/definitions/categoryList"
+            },
+            "rejected": {
+              "$ref": "#/definitions/categoryList"
+            }
+          },
+          "additionalProperties": false
+        },
+        "interviews": {
+          "type": "object",
+          "description": "Tracked interviews",
+          "properties": {
+            "upcoming": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/interviewItem"
+              }
+            },
+            "completed": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/interviewItem"
+              }
+            }
+          }
+        },
+        "documents": {
+          "type": "object",
+          "description": "Tracked documents",
+          "properties": {
+            "resumes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/documentItem"
+              }
+            },
+            "cover_letters": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/documentItem"
+              }
+            },
+            "other": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/documentItem"
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "categoryList": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of items in this category"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/indexItem"
+          }
+        }
+      },
+      "required": ["count", "items"]
+    },
+    "indexItem": {
+      "type": "object",
+      "description": "An indexed item (company or job)",
+      "required": ["name", "file"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Display name of the item"
+        },
+        "file": {
+          "type": "string",
+          "description": "Relative path to the file from workspace root"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Relevance or match score (0-100)"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the file was last modified"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Additional item-specific metadata",
+          "additionalProperties": true
+        }
+      }
+    },
+    "interviewItem": {
+      "type": "object",
+      "required": ["company", "job_file"],
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "Company name"
+        },
+        "job_file": {
+          "type": "string",
+          "description": "Path to the associated job file"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Interview date/time"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["phone", "video", "onsite", "technical", "behavioral", "final"],
+          "description": "Type of interview"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Interview notes or preparation"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": ["pending", "passed", "failed", "cancelled"],
+          "description": "Interview outcome (for completed interviews)"
+        }
+      }
+    },
+    "documentItem": {
+      "type": "object",
+      "required": ["name", "file"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Document name"
+        },
+        "file": {
+          "type": "string",
+          "description": "Relative path to the document"
+        },
+        "type": {
+          "type": "string",
+          "description": "Document type (resume, cover_letter, etc.)"
+        },
+        "target_job": {
+          "type": "string",
+          "description": "Job this document was created for (if tailored)"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the document was created"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "version": "1.0",
+      "created": "2024-01-20T10:30:00Z",
+      "last_updated": "2024-01-25T14:15:00Z",
+      "workspace_path": "/Users/john/job-search",
+      "profile_summary": {
+        "name": "John Smith",
+        "current_title": "Senior Software Engineer",
+        "skill_count": 15,
+        "profile_type": "quick"
+      },
+      "categories": {
+        "companies": {
+          "count": 3,
+          "items": [
+            {
+              "name": "Stripe",
+              "file": "companies/stripe.md",
+              "score": 92,
+              "last_updated": "2024-01-20T10:30:00Z"
+            },
+            {
+              "name": "Anthropic",
+              "file": "companies/anthropic.md",
+              "score": 90,
+              "last_updated": "2024-01-18T09:00:00Z"
+            }
+          ]
+        },
+        "jobs": {
+          "interested": {
+            "count": 2,
+            "items": [
+              {
+                "name": "Senior Engineer - Stripe",
+                "file": "jobs/interested/stripe-senior-engineer.md",
+                "score": 92,
+                "last_updated": "2024-01-20T10:30:00Z"
+              }
+            ]
+          },
+          "applied": {
+            "count": 1,
+            "items": [
+              {
+                "name": "Software Engineer - Anthropic",
+                "file": "jobs/applied/anthropic-swe.md",
+                "score": 90,
+                "last_updated": "2024-01-13T10:00:00Z",
+                "metadata": {
+                  "applied_date": "2024-01-13"
+                }
+              }
+            ]
+          },
+          "interviewed": {"count": 0, "items": []},
+          "offered": {"count": 0, "items": []},
+          "rejected": {"count": 0, "items": []}
+        },
+        "interviews": {
+          "upcoming": [],
+          "completed": []
+        },
+        "documents": {
+          "resumes": [
+            {
+              "name": "Main Resume",
+              "file": "self/resume/main-resume.md",
+              "type": "resume",
+              "created": "2024-01-20T10:30:00Z"
+            }
+          ],
+          "cover_letters": [],
+          "other": []
+        }
+      }
+    }
+  ]
+}

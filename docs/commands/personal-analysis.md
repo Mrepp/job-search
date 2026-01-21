@@ -58,7 +58,7 @@ Creates these files:
 self/
 ├── user.json              # Core profile
 ├── resume/
-│   └── master-resume.md   # Your resume
+│   └── main-resume.md   # Your resume
 ├── experience/            # Work history details
 ├── education/             # Education records
 └── projects/              # Project descriptions

@@ -9,9 +9,9 @@ This agent systematically analyzes the gap between a user's current skills and t
 ## Invocation
 
 This agent is used by:
-- `/skill-builder` command
-- `/find-position` command
-- `/ingest-job` command
+- `/job-search:skill-builder` command
+- `/job-search:find-position` command
+- `/job-search:ingest-job` command
 
 ## Analysis Process
 

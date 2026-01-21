@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://job-search.plugin/schemas/config.schema.json",
+  "title": "Job Search Workspace Configuration",
+  "description": "Configuration file for the job search workspace (.job-search-config.json)",
+  "type": "object",
+  "required": ["workspace_path", "created"],
+  "properties": {
+    "workspace_path": {
+      "type": "string",
+      "description": "Absolute path to the workspace directory",
+      "minLength": 1
+    },
+    "plugin_path": {
+      "type": "string",
+      "description": "Path to the job-search plugin installation"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the workspace was created"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last configuration update"
+    },
+    "profile_type": {
+      "type": "string",
+      "enum": ["quick", "full"],
+      "default": "quick",
+      "description": "Type of profile created during setup: quick (from resume parsing) or full (via /personal-analysis)"
+    },
+    "docs_copied": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether plugin documentation has been copied to the workspace"
+    },
+    "mkdocs_port": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 65535,
+      "default": 8000,
+      "description": "Default port for the MkDocs documentation server"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Plugin version that created this workspace"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "workspace_path": "/Users/john/job-search",
+      "plugin_path": "/Users/john/.claude/plugins/job-search",
+      "created": "2024-01-20T10:30:00Z",
+      "last_updated": "2024-01-20T10:30:00Z",
+      "profile_type": "quick",
+      "docs_copied": true,
+      "mkdocs_port": 8000,
+      "version": "1.0.0"
+    }
+  ]
+}

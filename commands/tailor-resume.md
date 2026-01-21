@@ -32,7 +32,7 @@ This command creates a customized version of your resume optimized for a specifi
 - Identify important keywords
 
 **Master Resume:**
-- Read `self/resume/master-resume.md`
+- Read `self/resume/main-resume.md`
 - Parse existing content
 - Identify all skills, experiences, projects
 
