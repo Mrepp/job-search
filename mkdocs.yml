@@ -1,0 +1,65 @@
+site_name: Job Search Assistant
+site_description: A comprehensive Claude Code plugin for intelligent job search, analysis, and career planning
+site_author: Job Search Plugin
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+    - Setting Up Profile: getting-started/profile-setup.md
+  - Commands:
+    - Personal Analysis: commands/personal-analysis.md
+    - Find Company: commands/find-company.md
+    - Find Position: commands/find-position.md
+    - Find Job Postings: commands/find-job-postings.md
+    - Ingest Job: commands/ingest-job.md
+    - Update Job Status: commands/update-job-status.md
+    - Skill Builder: commands/skill-builder.md
+    - Tailor Resume: commands/tailor-resume.md
+  - Workflows:
+    - Complete Job Search: workflows/complete-search.md
+    - Career Planning: workflows/career-planning.md
+    - Skill Development: workflows/skill-development.md
+  - Data Structures:
+    - User Profile: data-structures/user-profile.md
+    - Company Files: data-structures/company-files.md
+    - Job Files: data-structures/job-files.md
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - search.suggest
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+plugins:
+  - search

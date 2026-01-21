@@ -1,0 +1,61 @@
+{
+  "name": "job-search",
+  "version": "1.0.0",
+  "description": "A comprehensive job search assistant for intelligent research, analysis, and career planning",
+  "commands": [
+    {
+      "name": "personal-analysis",
+      "description": "Build and maintain your user profile with skills, experience, and preferences",
+      "path": "commands/personal-analysis.md"
+    },
+    {
+      "name": "find-company",
+      "description": "Research companies based on your criteria (area, industry, culture)",
+      "path": "commands/find-company.md"
+    },
+    {
+      "name": "find-position",
+      "description": "Identify career positions based on your skills and experience level",
+      "path": "commands/find-position.md"
+    },
+    {
+      "name": "find-job-postings",
+      "description": "Discover and rank relevant job postings matching your profile",
+      "path": "commands/find-job-postings.md"
+    },
+    {
+      "name": "ingest-job",
+      "description": "Add a job posting from URL or pasted content for analysis",
+      "path": "commands/ingest-job.md"
+    },
+    {
+      "name": "update-job-status",
+      "description": "Move a job through the application pipeline (interested → applied → interviewed → offered → rejected)",
+      "path": "commands/update-job-status.md"
+    },
+    {
+      "name": "skill-builder",
+      "description": "Map your skills, identify gaps, and create improvement plans",
+      "path": "commands/skill-builder.md"
+    },
+    {
+      "name": "tailor-resume",
+      "description": "Generate a tailored resume for a specific job posting",
+      "path": "commands/tailor-resume.md"
+    }
+  ],
+  "agents": [
+    "agents/profile-builder.md",
+    "agents/company-researcher.md",
+    "agents/position-analyzer.md",
+    "agents/job-matcher.md",
+    "agents/skill-gap-analyzer.md",
+    "agents/career-path-planner.md"
+  ],
+  "skills": [
+    "skills/company-research/SKILL.md",
+    "skills/job-analysis/SKILL.md",
+    "skills/career-mapping/SKILL.md",
+    "skills/skill-assessment/SKILL.md"
+  ]
+}
