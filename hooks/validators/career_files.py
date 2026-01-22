@@ -56,8 +56,11 @@ def validate_skill_map(file_path: str) -> list[str]:
 
     # Validate generated_date format
     if "generated_date" in data:
-        date_errors = _validate_iso_date(data["generated_date"], "generated_date")
-        errors.extend(date_errors)
+        if not is_valid_iso_date(data["generated_date"]):
+            errors.append(
+                f"generated_date: invalid format '{data['generated_date']}'. "
+                "Use ISO 8601 (e.g., '2024-01-15' or '2024-01-15T10:30:00Z')"
+            )
 
     # Validate skill_inventory
     if "skill_inventory" in data:
@@ -104,8 +107,11 @@ def validate_career_tree(file_path: str) -> list[str]:
 
     # Validate generated_date format
     if "generated_date" in data:
-        date_errors = _validate_iso_date(data["generated_date"], "generated_date")
-        errors.extend(date_errors)
+        if not is_valid_iso_date(data["generated_date"]):
+            errors.append(
+                f"generated_date: invalid format '{data['generated_date']}'. "
+                "Use ISO 8601 (e.g., '2024-01-15' or '2024-01-15T10:30:00Z')"
+            )
 
     # Validate current_position
     if "current_position" in data:
@@ -126,27 +132,6 @@ def validate_career_tree(file_path: str) -> list[str]:
     if "recommendations" in data and data["recommendations"]:
         recs_errors = _validate_recommendations(data["recommendations"])
         errors.extend(recs_errors)
-
-    return errors
-
-
-def _validate_iso_date(date_str: Any, field_name: str) -> list[str]:
-    """Validate an ISO 8601 date string."""
-    errors = []
-
-    if not isinstance(date_str, str):
-        return [f"{field_name}: must be a string"]
-
-    patterns = [
-        r"^\d{4}-\d{2}-\d{2}$",
-        r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}",
-    ]
-
-    if not any(re.match(p, date_str) for p in patterns):
-        errors.append(
-            f"{field_name}: invalid date format '{date_str}'. "
-            "Use ISO 8601 (e.g., '2024-01-15' or '2024-01-15T10:30:00Z')"
-        )
 
     return errors
 

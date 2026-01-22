@@ -1,0 +1,20 @@
+{
+  "name": "mrepp-plugins",
+  "owner": {
+    "name": "Matt Repp"
+  },
+  "metadata": {
+    "description": "Job search and career planning plugins for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "job-search",
+      "source": ".",
+      "description": "A comprehensive job search assistant for intelligent research, analysis, and career planning",
+      "version": "1.1.0",
+      "category": "productivity",
+      "tags": ["job-search", "career", "resume", "skill-assessment"],
+      "strict": false
+    }
+  ]
+}

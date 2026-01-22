@@ -3,7 +3,6 @@ Validator for job posting markdown files (jobs/{status}/*.md).
 """
 from __future__ import annotations
 
-import os
 import re
 
 from .common import (
@@ -11,7 +10,6 @@ from .common import (
     extract_markdown_sections,
     find_h1_title,
     validate_score_range,
-    format_suggestion,
 )
 
 
@@ -121,9 +119,10 @@ def _validate_status_directory(file_path: str) -> list[str]:
             break
 
     if not status_found:
+        valid_dirs = ", ".join(f"jobs/{s}/" for s in VALID_STATUSES)
         errors.append(
             f"Job file must be in a valid status directory. "
-            f"Valid directories: jobs/{{{', '.join(VALID_STATUSES)}}}/"
+            f"Valid directories: {valid_dirs}"
         )
 
     return errors
@@ -209,6 +208,7 @@ def _validate_match_breakdown(content: str, total_score: int) -> list[str]:
     # Check if breakdown sums to total (if we have the full breakdown)
     if len(category_scores) == len(SCORE_BREAKDOWN):
         breakdown_sum = sum(category_scores.values())
+        # Allow 2-point variance for rounding in individual category scores
         tolerance = 2
         if abs(breakdown_sum - total_score) > tolerance:
             errors.append(

@@ -13,8 +13,25 @@ A comprehensive Claude Code plugin to assist users in finding their ideal job th
 
 ## Installation
 
-1. Clone or copy this plugin to your Claude Code plugins directory
-2. The plugin will be automatically loaded when you start Claude Code
+### From Marketplace (Recommended)
+
+Install directly from the marketplace:
+
+```shell
+# Add the marketplace (one-time)
+/plugin marketplace add Mrepp/job-search
+
+# Install the plugin
+/plugin install job-search@mrepp-plugins
+```
+
+### Manual Installation
+
+For development or if you prefer manual installation:
+
+```bash
+git clone https://github.com/Mrepp/job-search ~/.claude/plugins/job-search
+```
 
 ## Commands
 
@@ -61,56 +78,19 @@ The plugin stores all data in your working directory:
     └── skill-map.json         # Skill inventory
 ```
 
-## Installation Guide
+### Verify Installation
 
-### Prerequisites
+Restart Claude Code or start a new session. Run:
 
-- [Claude Code CLI](https://github.com/anthropics/claude-code) installed and configured
-- Node.js 18+ (for Claude Code)
-
-### Installing the Plugin
-
-1. **Locate your Claude Code plugins directory**
-
-   Claude Code looks for plugins in `~/.claude/plugins/` by default.
-
-2. **Clone or copy this plugin**
-
-   ```bash
-   # Option 1: Clone directly into plugins directory
-   git clone <repository-url> ~/.claude/plugins/job-search
-
-   # Option 2: Copy from current location
-   cp -r /path/to/job-search ~/.claude/plugins/
-   ```
-
-3. **Verify installation**
-
-   Restart Claude Code or start a new session. The plugin commands (like `/job-search:setup`, `/job-search:find-job-postings`, etc.) will be available automatically.
-
-### Alternative: Project-Local Installation
-
-You can also install the plugin locally within a specific project:
-
-```bash
-# Create a .claude/plugins directory in your project
-mkdir -p .claude/plugins
-
-# Copy the plugin there
-cp -r /path/to/job-search .claude/plugins/
-```
-
-This makes the plugin available only when working in that project directory.
-
-### Verifying the Plugin Works
-
-Run any plugin command to verify installation:
-
-```bash
+```shell
 /job-search:setup
 ```
 
 If the command is recognized, the plugin is installed correctly.
+
+### Prerequisites
+
+- [Claude Code CLI](https://github.com/anthropics/claude-code) installed and configured
 
 ## Getting Started
 

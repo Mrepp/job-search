@@ -17,26 +17,49 @@
     },
     "skill_inventory": {
       "type": "object",
-      "description": "Categorized skills inventory",
+      "description": "Categorized skill trees with facet breakdown",
       "additionalProperties": {
         "type": "array",
         "items": {
           "type": "object",
-          "required": ["name", "level"],
+          "required": ["name", "facets", "computed_score"],
           "properties": {
             "name": {
               "type": "string",
               "minLength": 1
             },
-            "level": {
-              "type": "integer",
+            "computed_score": {
+              "type": "number",
               "minimum": 0,
-              "maximum": 3,
-              "description": "Skill level: 0=None, 1=Basic, 2=Proficient, 3=Expert"
+              "maximum": 100,
+              "description": "Aggregated score from facets (0-100)"
             },
             "years": {
               "type": "number",
               "minimum": 0
+            },
+            "last_used": {
+              "type": "string",
+              "format": "date"
+            },
+            "facets": {
+              "type": "object",
+              "description": "Sub-skill breakdown (required)",
+              "minProperties": 1,
+              "additionalProperties": {
+                "type": "object",
+                "required": ["display", "level"],
+                "properties": {
+                  "display": { "type": "string", "description": "Human-readable facet name" },
+                  "level": { "type": "integer", "minimum": 0, "maximum": 3, "description": "0=None, 1=Basic, 2=Proficient, 3=Expert" },
+                  "evidence_count": { "type": "integer", "minimum": 0 },
+                  "components": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": { "type": "string" }
             }
           }
         }
@@ -51,23 +74,32 @@
     },
     "gaps": {
       "type": "array",
+      "description": "Skill gaps identified at the facet level",
       "items": {
         "type": "object",
-        "required": ["skill", "current_level", "target_level", "priority"],
+        "required": ["skill", "facet", "current_level", "target_level", "priority"],
         "properties": {
           "skill": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "description": "Parent skill name (e.g., Python)"
+          },
+          "facet": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Specific sub-skill gap (e.g., 'machine_learning')"
           },
           "current_level": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 3
+            "maximum": 3,
+            "description": "Current facet level"
           },
           "target_level": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 3
+            "maximum": 3,
+            "description": "Required facet level for target roles"
           },
           "priority": {
             "type": "string",
@@ -85,6 +117,10 @@
             "type": "string",
             "enum": ["not_started", "in_progress", "completed"],
             "default": "not_started"
+          },
+          "rationale": {
+            "type": "string",
+            "description": "Why this facet gap matters for target roles"
           }
         }
       }

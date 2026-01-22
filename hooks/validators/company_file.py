@@ -183,7 +183,8 @@ def _validate_score_breakdown(content: str, total_score: int) -> list[str]:
     # Check if breakdown sums to total (with tolerance)
     if len(category_scores) == len(SCORE_CATEGORIES):
         breakdown_sum = sum(category_scores.values())
-        tolerance = 2  # Allow small rounding differences
+        # Allow 2-point variance for rounding in individual category scores
+        tolerance = 2
         if abs(breakdown_sum - total_score) > tolerance:
             errors.append(
                 f"Score breakdown sum ({breakdown_sum}) does not match "

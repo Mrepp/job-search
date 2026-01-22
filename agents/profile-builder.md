@@ -7,7 +7,7 @@ Interactive agent for building user profiles through guided questions, resume pa
 This agent helps users create comprehensive professional profiles by:
 - Gathering personal and career information through conversation
 - Parsing resumes and LinkedIn exports to extract structured data
-- Suggesting skill confidence scores based on evidence
+- Building skill trees with faceted sub-skill breakdown
 - Creating a complete profile for job matching
 
 ## Invocation
@@ -64,33 +64,87 @@ When given LinkedIn content, extract:
 - Certifications
 - Volunteer experience
 
-### Skill Confidence Scoring
+### Skill Tree Construction
 
-Apply the 1-3 confidence scale:
+For each skill identified, build a faceted skill tree from resume context:
 
-**Score 3 (Expert)**
-- 5+ years of experience
-- Listed as primary skill/responsibility
-- Multiple projects/roles using it
-- Certifications in the area
-- Leadership or teaching others
+1. **Load Taxonomy**
+   - Check `schemas/skill-taxonomy.schema.json` for predefined facets
+   - If skill not in taxonomy, generate facets on-demand from context
 
-**Score 2 (Proficient)**
-- 2-5 years of experience
-- Regular use in roles
-- Several projects using it
-- Comfortable working independently
+2. **Context Analysis**
+   - Extract text surrounding each skill mention
+   - Match against facet keywords (e.g., "Django REST APIs" → python.web_development)
+   - Count evidence frequency per facet
 
-**Score 1 (Familiar)**
-- Less than 2 years
-- Used occasionally
-- Limited project experience
-- Still learning
+3. **Facet Confidence Assignment**
+   - Multiple strong mentions (3+) → confidence 3
+   - Some mentions (2) → confidence 2
+   - Single mention → confidence 1
+   - No mention → confidence 0 (omit facet)
+
+4. **Evidence Linking**
+   - For each facet, create evidence entries linking to experience files
+   - Set weight based on source: job=1.0, project=0.5, education=0.3
+
+**Example Skill Tree:**
+
+Resume text: "Led development of Django REST APIs serving 1M users, built data pipelines with Pandas"
+
+```json
+{
+  "name": "Python",
+  "years": 5,
+  "facets": {
+    "web_development": {
+      "confidence": 3,
+      "inferred": true,
+      "evidence_count": 1,
+      "components": ["Django", "REST APIs"]
+    },
+    "data_science": {
+      "confidence": 2,
+      "inferred": true,
+      "evidence_count": 1,
+      "components": ["Pandas"]
+    }
+  },
+  "evidence": [
+    {
+      "type": "job",
+      "description": "Led development of Django REST APIs",
+      "facets_demonstrated": ["web_development"],
+      "weight": 1.0
+    },
+    {
+      "type": "job",
+      "description": "Built data pipelines with Pandas",
+      "facets_demonstrated": ["data_science"],
+      "weight": 1.0
+    }
+  ],
+  "computed_score": 78
+}
+```
+
+#### On-Demand Facet Generation
+
+For skills not in the taxonomy, infer reasonable facets:
+
+- Analyze how the skill is used in resume context
+- Group related technologies/use cases
+- Create 3-5 logical facet categories
+
+Example for "Terraform" (not predefined):
+
+- infrastructure_provisioning: EC2, VPC, RDS modules
+- state_management: remote state, workspaces
+- ci_cd_integration: GitHub Actions, pipelines
 
 ### Profile Hash Generation
 
 Generate a hash of the profile state to track when job matches were calculated. Include:
-- Skill list and confidence levels
+- Skill trees with facet levels
 - Experience years
 - Target titles and industries
 - Salary expectations
@@ -121,8 +175,9 @@ This allows job postings to show if they were scored against an outdated profile
 13. Or you can paste your resume content here.
 
 ### Skill Validation
-14. Here are the skills I extracted with suggested confidence scores. Would you like to adjust any?
-15. Are there any skills I missed that you'd like to add?
+
+14. Here are the skill trees I extracted. Would you like to adjust any facet levels?
+15. Are there any skills or facets I missed that you'd like to add?
 
 ## Output Files
 

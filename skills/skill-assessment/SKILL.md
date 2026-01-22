@@ -1,72 +1,57 @@
 # Skill Assessment
 
-Knowledge module for evaluating and scoring professional skills.
+Knowledge module for evaluating and scoring professional skills using faceted skill trees.
 
-## Confidence Scoring Methodology (1-3 Scale)
+## Skill Tree and Facets
 
-### Score 3: Expert Level
+Skills are not monolithic - they have **facets** (sub-skills) that capture depth in specific areas. For example, "Python" encompasses web development, data science, ML, and scripting - a user may be expert in some facets but basic in others.
 
-**Criteria:**
-- 5+ years of hands-on experience
-- Can mentor/teach others effectively
-- Deep understanding of internals and edge cases
-- Has solved complex problems independently
-- Can make architectural decisions
-- Industry recognition (talks, publications, certifications)
+### Facet Structure
 
-**Resume Indicators:**
-- Listed as "lead", "senior", "architect" for this skill
-- Mentioned in multiple roles spanning 5+ years
-- Associated with leadership responsibilities
-- Certifications or awards in the area
+Each skill is a tree with facets (sub-skills) that have independent confidence levels:
 
-**Interview Evidence:**
-- Can explain tradeoffs and alternatives
-- Knows historical context and evolution
-- Can discuss failure modes and debugging approaches
-- Has opinions backed by experience
+```json
+{
+  "name": "Python",
+  "years": 5,
+  "facets": {
+    "web_development": { "confidence": 3, "components": ["Django", "FastAPI"] },
+    "data_science": { "confidence": 2, "components": ["Pandas", "NumPy"] },
+    "machine_learning": { "confidence": 1, "components": ["scikit-learn"] }
+  },
+  "computed_score": 78
+}
+```
 
-### Score 2: Working Proficiency
+### Facet Confidence Levels
 
-**Criteria:**
-- 2-5 years of experience
-- Comfortable working independently
-- Can complete most tasks without help
-- Understands best practices
-- Can troubleshoot common issues
+Each facet uses a 0-3 scale:
 
-**Resume Indicators:**
-- Listed in 2-3 roles
-- Used in multiple projects
-- Part of regular job duties
-- Some measurable achievements
+- **Level 3 (Expert)**: 5+ years, can mentor others, deep understanding
+- **Level 2 (Proficient)**: 2-5 years, works independently, knows best practices
+- **Level 1 (Basic)**: <2 years, understands concepts, can complete basic tasks
+- **Level 0 (None)**: No experience with this facet
 
-**Interview Evidence:**
-- Can complete practical exercises
-- Knows common patterns and pitfalls
-- Can read and understand advanced code/concepts
-- May need occasional guidance on complex topics
+### Facet Inference
 
-### Score 1: Basic Familiarity
+Facets are **inferred from evidence** (low friction) rather than manually rated:
 
-**Criteria:**
-- Less than 2 years of experience
-- Has used in projects (not just tutorials)
-- Understands core concepts
-- Can complete basic tasks with reference
-- Actively learning
+1. **Resume parsing** - Extract context around skill mentions
+2. **Experience file mining** - Link technologies to facets
+3. **Project analysis** - Infer depth from project descriptions
 
-**Resume Indicators:**
-- Listed once or in "additional skills"
-- Recent education or bootcamp
-- Side projects only
-- Coursework mention
+See `schemas/skill-taxonomy.schema.json` for predefined facets and keywords.
 
-**Interview Evidence:**
-- Can explain basic concepts
-- Has completed tutorials/courses
-- May struggle with advanced questions
-- Shows enthusiasm to learn
+### Aggregation Rules
+
+The `computed_score` (0-100) is derived from facets:
+
+1. **Weighted average** by evidence count per facet
+2. **Breadth bonus** - 3+ proficient facets adds +0.3 to base
+3. **Depth bonus** - Expert in any facet ensures minimum base of 2.0
+4. **Recency decay** - 10% penalty if unused for 2+ years
+
+See `agents/skill-gap-analyzer.md` for the full algorithm.
 
 ## Skill Taxonomy
 

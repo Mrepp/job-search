@@ -1,0 +1,281 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skill-taxonomy.schema.json",
+  "title": "Skill Taxonomy",
+  "description": "Hierarchical skill facets with keyword mappings for inference. For skills not defined here, Claude generates facets on-demand from context.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "skills": {
+      "type": "object",
+      "description": "Predefined skill facets indexed by skill name (lowercase)",
+      "additionalProperties": {
+        "$ref": "#/definitions/skillFacets"
+      }
+    },
+    "_meta": {
+      "type": "object",
+      "properties": {
+        "generated_facets": {
+          "type": "string",
+          "description": "For skills not in taxonomy, Claude infers facets from resume/project context"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "skillFacets": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/facet"
+      }
+    },
+    "facet": {
+      "type": "object",
+      "required": ["display", "keywords"],
+      "properties": {
+        "display": {
+          "type": "string",
+          "description": "Human-readable facet name"
+        },
+        "keywords": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Keywords that indicate this facet in resume/project text"
+        },
+        "components": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Specific technologies/libraries within this facet"
+        }
+      }
+    }
+  },
+  "default_taxonomy": {
+    "python": {
+      "web_development": {
+        "display": "Web Development",
+        "keywords": ["django", "flask", "fastapi", "rest", "api", "web framework", "wsgi", "asgi", "tornado", "aiohttp", "starlette"],
+        "components": ["Django", "Flask", "FastAPI", "Tornado", "aiohttp", "Starlette", "Pyramid"]
+      },
+      "data_science": {
+        "display": "Data Science",
+        "keywords": ["pandas", "numpy", "data analysis", "jupyter", "visualization", "matplotlib", "seaborn", "plotly", "data wrangling", "analytics"],
+        "components": ["Pandas", "NumPy", "Matplotlib", "Seaborn", "Plotly", "Jupyter", "SciPy"]
+      },
+      "machine_learning": {
+        "display": "Machine Learning",
+        "keywords": ["ml", "tensorflow", "pytorch", "scikit-learn", "deep learning", "neural", "keras", "hugging face", "transformers", "nlp", "computer vision", "model training"],
+        "components": ["TensorFlow", "PyTorch", "scikit-learn", "Keras", "Hugging Face", "XGBoost", "LightGBM"]
+      },
+      "scripting_automation": {
+        "display": "Scripting & Automation",
+        "keywords": ["script", "automation", "cli", "command line", "pipeline", "etl", "cron", "batch", "shell", "subprocess"],
+        "components": ["Click", "argparse", "Typer", "subprocess", "asyncio"]
+      },
+      "devops_tooling": {
+        "display": "DevOps & Tooling",
+        "keywords": ["pytest", "unittest", "tox", "poetry", "pip", "packaging", "ci/cd", "docker", "testing", "linting", "mypy"],
+        "components": ["pytest", "tox", "poetry", "setuptools", "pip", "mypy", "black", "ruff"]
+      }
+    },
+    "javascript": {
+      "frontend": {
+        "display": "Frontend Development",
+        "keywords": ["react", "vue", "angular", "dom", "browser", "ui", "component", "svelte", "css", "html", "spa"],
+        "components": ["React", "Vue", "Angular", "Svelte", "jQuery", "Solid"]
+      },
+      "backend": {
+        "display": "Backend/Node.js",
+        "keywords": ["node", "express", "nestjs", "server", "api", "koa", "hapi", "fastify", "middleware"],
+        "components": ["Node.js", "Express", "NestJS", "Fastify", "Koa", "Hapi"]
+      },
+      "fullstack": {
+        "display": "Full-Stack",
+        "keywords": ["next", "nuxt", "remix", "full stack", "ssr", "ssg", "gatsby", "astro"],
+        "components": ["Next.js", "Nuxt", "Remix", "Gatsby", "Astro", "SvelteKit"]
+      },
+      "mobile": {
+        "display": "Mobile Development",
+        "keywords": ["react native", "expo", "mobile", "ios", "android", "capacitor", "ionic"],
+        "components": ["React Native", "Expo", "Ionic", "Capacitor"]
+      },
+      "testing": {
+        "display": "Testing & Quality",
+        "keywords": ["jest", "mocha", "cypress", "playwright", "testing library", "vitest", "e2e", "unit test"],
+        "components": ["Jest", "Mocha", "Cypress", "Playwright", "Testing Library", "Vitest"]
+      }
+    },
+    "typescript": {
+      "frontend": {
+        "display": "Frontend Development",
+        "keywords": ["react", "vue", "angular", "component", "svelte", "ui"],
+        "components": ["React", "Vue", "Angular", "Svelte"]
+      },
+      "backend": {
+        "display": "Backend Development",
+        "keywords": ["node", "express", "nestjs", "server", "api", "fastify"],
+        "components": ["Node.js", "Express", "NestJS", "Fastify", "tRPC"]
+      },
+      "type_system": {
+        "display": "Advanced Types",
+        "keywords": ["generic", "utility types", "conditional types", "mapped types", "infer", "template literal"],
+        "components": ["Generics", "Utility Types", "Type Guards", "Branded Types"]
+      }
+    },
+    "java": {
+      "backend": {
+        "display": "Backend/Enterprise",
+        "keywords": ["spring", "spring boot", "hibernate", "jpa", "rest", "microservices", "maven", "gradle"],
+        "components": ["Spring", "Spring Boot", "Hibernate", "JPA", "Maven", "Gradle"]
+      },
+      "android": {
+        "display": "Android Development",
+        "keywords": ["android", "kotlin", "jetpack", "compose", "mobile"],
+        "components": ["Android SDK", "Jetpack", "Compose", "Room"]
+      },
+      "big_data": {
+        "display": "Big Data",
+        "keywords": ["spark", "hadoop", "kafka", "flink", "streaming", "batch processing"],
+        "components": ["Apache Spark", "Hadoop", "Kafka", "Flink"]
+      }
+    },
+    "go": {
+      "backend": {
+        "display": "Backend Services",
+        "keywords": ["gin", "echo", "fiber", "rest", "api", "grpc", "microservices"],
+        "components": ["Gin", "Echo", "Fiber", "gRPC", "Chi"]
+      },
+      "systems": {
+        "display": "Systems Programming",
+        "keywords": ["concurrency", "goroutine", "channel", "networking", "cli", "daemon"],
+        "components": ["Goroutines", "Channels", "net/http", "Cobra"]
+      },
+      "cloud_native": {
+        "display": "Cloud Native",
+        "keywords": ["kubernetes", "docker", "operator", "crd", "cloud", "infrastructure"],
+        "components": ["Kubernetes client-go", "Docker SDK", "Operators"]
+      }
+    },
+    "rust": {
+      "systems": {
+        "display": "Systems Programming",
+        "keywords": ["memory", "performance", "unsafe", "ffi", "embedded", "os", "kernel"],
+        "components": ["std", "core", "alloc", "FFI bindings"]
+      },
+      "web": {
+        "display": "Web Development",
+        "keywords": ["actix", "axum", "rocket", "wasm", "webassembly", "yew", "leptos"],
+        "components": ["Actix", "Axum", "Rocket", "Yew", "Leptos", "WASM"]
+      },
+      "cli": {
+        "display": "CLI Tools",
+        "keywords": ["clap", "structopt", "terminal", "command line", "tui"],
+        "components": ["clap", "structopt", "indicatif", "crossterm"]
+      }
+    },
+    "sql": {
+      "querying": {
+        "display": "Query Writing",
+        "keywords": ["select", "join", "subquery", "cte", "window function", "aggregate"],
+        "components": ["Joins", "CTEs", "Window Functions", "Subqueries"]
+      },
+      "optimization": {
+        "display": "Performance Optimization",
+        "keywords": ["index", "explain", "query plan", "optimization", "tuning", "performance"],
+        "components": ["Indexing", "Query Plans", "Partitioning", "Statistics"]
+      },
+      "administration": {
+        "display": "Database Administration",
+        "keywords": ["backup", "replication", "migration", "schema", "ddl", "maintenance"],
+        "components": ["Migrations", "Replication", "Backups", "Schema Design"]
+      }
+    },
+    "kubernetes": {
+      "deployment": {
+        "display": "Deployment & Workloads",
+        "keywords": ["deployment", "statefulset", "daemonset", "pod", "replica", "rolling update"],
+        "components": ["Deployments", "StatefulSets", "DaemonSets", "Jobs", "CronJobs"]
+      },
+      "networking": {
+        "display": "Networking",
+        "keywords": ["service", "ingress", "network policy", "load balancer", "dns"],
+        "components": ["Services", "Ingress", "NetworkPolicies", "CoreDNS"]
+      },
+      "operations": {
+        "display": "Operations & Observability",
+        "keywords": ["helm", "operator", "monitoring", "logging", "prometheus", "grafana"],
+        "components": ["Helm", "Operators", "Prometheus", "Grafana", "Loki"]
+      },
+      "security": {
+        "display": "Security",
+        "keywords": ["rbac", "service account", "secret", "pod security", "admission"],
+        "components": ["RBAC", "Secrets", "Pod Security Policies", "OPA"]
+      }
+    },
+    "aws": {
+      "compute": {
+        "display": "Compute Services",
+        "keywords": ["ec2", "lambda", "ecs", "eks", "fargate", "batch"],
+        "components": ["EC2", "Lambda", "ECS", "EKS", "Fargate"]
+      },
+      "storage": {
+        "display": "Storage & Databases",
+        "keywords": ["s3", "rds", "dynamodb", "elasticache", "aurora", "redshift"],
+        "components": ["S3", "RDS", "DynamoDB", "ElastiCache", "Aurora"]
+      },
+      "networking": {
+        "display": "Networking",
+        "keywords": ["vpc", "route53", "cloudfront", "alb", "api gateway"],
+        "components": ["VPC", "Route 53", "CloudFront", "ALB", "API Gateway"]
+      },
+      "devops": {
+        "display": "DevOps & IaC",
+        "keywords": ["cloudformation", "cdk", "codepipeline", "codebuild", "terraform"],
+        "components": ["CloudFormation", "CDK", "CodePipeline", "CodeBuild"]
+      }
+    },
+    "docker": {
+      "containerization": {
+        "display": "Container Building",
+        "keywords": ["dockerfile", "image", "build", "layer", "multi-stage", "optimize"],
+        "components": ["Dockerfile", "Multi-stage builds", "BuildKit"]
+      },
+      "orchestration": {
+        "display": "Orchestration",
+        "keywords": ["compose", "swarm", "stack", "service", "network", "volume"],
+        "components": ["Docker Compose", "Docker Swarm", "Networks", "Volumes"]
+      },
+      "registry": {
+        "display": "Registry & Distribution",
+        "keywords": ["registry", "push", "pull", "tag", "ecr", "gcr", "dockerhub"],
+        "components": ["Docker Hub", "ECR", "GCR", "Harbor"]
+      }
+    },
+    "react": {
+      "core": {
+        "display": "Core React",
+        "keywords": ["component", "hooks", "state", "props", "jsx", "lifecycle"],
+        "components": ["Functional Components", "Hooks", "Context", "Refs"]
+      },
+      "state_management": {
+        "display": "State Management",
+        "keywords": ["redux", "zustand", "recoil", "jotai", "mobx", "context"],
+        "components": ["Redux", "Zustand", "Recoil", "Jotai", "MobX"]
+      },
+      "styling": {
+        "display": "Styling",
+        "keywords": ["css-in-js", "styled-components", "tailwind", "emotion", "css modules"],
+        "components": ["Styled Components", "Tailwind CSS", "Emotion", "CSS Modules"]
+      },
+      "testing": {
+        "display": "Testing",
+        "keywords": ["jest", "testing library", "enzyme", "cypress", "rtl"],
+        "components": ["React Testing Library", "Jest", "Cypress"]
+      }
+    }
+  }
+}

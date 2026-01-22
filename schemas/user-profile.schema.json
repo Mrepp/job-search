@@ -73,27 +73,53 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "confidence"],
+        "required": ["name", "facets"],
         "properties": {
           "name": {
             "type": "string",
             "minLength": 1,
-            "description": "Skill name"
-          },
-          "confidence": {
-            "type": "integer",
-            "enum": [1, 2, 3],
-            "description": "Confidence level: 1=Basic, 2=Proficient, 3=Expert"
+            "description": "Skill name (e.g., Python, Kubernetes, AWS)"
           },
           "years": {
             "type": "number",
             "minimum": 0,
-            "description": "Years of experience with this skill"
+            "description": "Total years of experience with this skill"
+          },
+          "last_used": {
+            "type": "string",
+            "format": "date",
+            "description": "When this skill was last used professionally"
+          },
+          "facets": {
+            "type": "object",
+            "description": "Sub-skill breakdown - the core of the skill tree",
+            "minProperties": 1,
+            "additionalProperties": {
+              "$ref": "#/definitions/facet"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "description": "Proof of skill usage from jobs, projects, certifications",
+            "items": {
+              "$ref": "#/definitions/evidence"
+            }
+          },
+          "computed_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Aggregated score from facets (auto-calculated)"
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Cross-cutting concerns: web, data, ml, devops, etc."
           }
         }
       },
       "minItems": 1,
-      "description": "List of skills with confidence levels"
+      "description": "Skill tree with faceted sub-skill breakdown"
     },
     "profile_hash": {
       "type": "string",
@@ -105,5 +131,73 @@
       "description": "ISO 8601 timestamp of last update"
     }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "definitions": {
+    "facet": {
+      "type": "object",
+      "required": ["confidence"],
+      "properties": {
+        "display": {
+          "type": "string",
+          "description": "Human-readable facet name"
+        },
+        "confidence": {
+          "type": "integer",
+          "enum": [0, 1, 2, 3],
+          "description": "0=None, 1=Basic, 2=Proficient, 3=Expert"
+        },
+        "inferred": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether this was auto-inferred vs manually set"
+        },
+        "evidence_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of evidence items supporting this facet"
+        },
+        "components": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Specific technologies/tools in this facet"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["type", "description"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["job", "project", "certification", "contribution", "education", "self_reported"],
+          "description": "Source type of the evidence"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "When this evidence was created/earned"
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description of the skill usage"
+        },
+        "source_file": {
+          "type": "string",
+          "description": "Path to experience/project file if applicable"
+        },
+        "facets_demonstrated": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Which facets this evidence supports"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 1.0,
+          "default": 0.5,
+          "description": "Evidence strength: 1.0=professional, 0.5=project, 0.3=coursework"
+        }
+      }
+    }
+  }
 }

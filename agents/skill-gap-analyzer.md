@@ -17,7 +17,7 @@ This agent is used by:
 
 ### Step 1: Skill Inventory
 
-Build comprehensive skill inventory from user profile:
+Build comprehensive skill inventory from user profile skill trees:
 
 ```json
 {
@@ -25,17 +25,28 @@ Build comprehensive skill inventory from user profile:
     {
       "name": "Python",
       "category": "programming_languages",
-      "confidence": 3,
+      "computed_score": 78,
       "years": 5,
-      "evidence": ["primary language at current job", "multiple projects"],
-      "last_used": "current"
+      "last_used": "current",
+      "facets": {
+        "web_development": { "confidence": 3, "evidence_count": 4 },
+        "data_science": { "confidence": 2, "evidence_count": 2 },
+        "machine_learning": { "confidence": 1, "evidence_count": 1 }
+      },
+      "evidence": [
+        { "type": "job", "description": "Django APIs at Acme", "facets_demonstrated": ["web_development"] }
+      ]
     },
     {
       "name": "AWS",
       "category": "cloud",
-      "confidence": 2,
+      "computed_score": 55,
       "years": 3,
-      "evidence": ["EC2, S3, Lambda usage"],
+      "facets": {
+        "compute": { "confidence": 2, "evidence_count": 2 },
+        "storage": { "confidence": 2, "evidence_count": 1 },
+        "networking": { "confidence": 1, "evidence_count": 1 }
+      },
       "last_used": "current"
     }
   ]
@@ -68,22 +79,55 @@ Required Skills:
 
 ### Step 3: Gap Identification
 
-For each required skill:
+For each required skill, analyze at both skill and facet level:
+
+```
+Gap Analysis: Python (for ML Engineering Role)
+
+Current State:
+- Computed Score: 78/100
+
+Facet Breakdown:
+┌────────────────────┬─────────┬──────────┬─────────┐
+│ Facet              │ Current │ Required │ Gap     │
+├────────────────────┼─────────┼──────────┼─────────┤
+│ web_development    │ 3       │ 1        │ None    │
+│ data_science       │ 2       │ 3        │ 1 level │
+│ machine_learning   │ 1       │ 3        │ 2 levels│
+│ scripting          │ 2       │ 2        │ None    │
+└────────────────────┴─────────┴──────────┴─────────┘
+
+Critical Gap: machine_learning facet (1 → 3)
+Priority: P0 (Critical for ML roles)
+Effort: High (3-6 months focused study)
+
+Note: Overall Python score is high, but the
+specific ML facet is weak for target roles.
+```
 
 ```
 Gap Analysis: Kubernetes
 
 Current State:
-- Level: 1 (Basic)
-- Evidence: Docker experience, read documentation
+- Computed Score: 22/100
 - Last practiced: 6 months ago
+
+Facet Breakdown:
+┌────────────────────┬─────────┬──────────┬─────────┐
+│ Facet              │ Current │ Required │ Gap     │
+├────────────────────┼─────────┼──────────┼─────────┤
+│ deployment         │ 1       │ 3        │ 2 levels│
+│ networking         │ 0       │ 2        │ 2 levels│
+│ operations         │ 0       │ 2        │ 2 levels│
+│ security           │ 0       │ 1        │ 1 level │
+└────────────────────┴─────────┴──────────┴─────────┘
 
 Target State:
 - Level: 2-3 (Proficient to Expert)
 - Required by: 8/10 target jobs
 - Essential for: Platform/Infrastructure roles
 
-Gap Size: 2 levels (1 → 3)
+Gap Size: 2 levels overall
 Priority: P0 (Critical)
 Effort: Medium (2-4 months focused study)
 ```
@@ -233,6 +277,146 @@ Week 4: AWS migration (EKS)
 Week 5-6: Polish and documentation
 ```
 
+## Skill Aggregation Algorithm
+
+Compute the overall skill score from facets:
+
+### Aggregation Formula
+
+```python
+def compute_skill_score(skill):
+    """
+    Compute computed_score (0-100) from facets.
+    """
+    facets = skill['facets']
+
+    # Step 1: Weighted average by evidence count
+    total_weight = 0
+    weighted_sum = 0
+    for facet in facets.values():
+        weight = max(1, facet.get('evidence_count', 1))
+        weighted_sum += facet['confidence'] * weight
+        total_weight += weight
+
+    base_score = weighted_sum / total_weight if total_weight > 0 else 0
+
+    # Step 2: Breadth bonus (proficiency across multiple areas)
+    proficient_facets = sum(1 for f in facets.values() if f['confidence'] >= 2)
+    if proficient_facets >= 3:
+        base_score = min(3, base_score + 0.3)
+
+    # Step 3: Depth bonus (expertise in any area)
+    has_expert_facet = any(f['confidence'] >= 3 for f in facets.values())
+    if has_expert_facet:
+        base_score = max(base_score, 2.0)
+
+    # Step 4: Recency decay
+    if skill.get('last_used'):
+        months_ago = months_since(skill['last_used'])
+        if months_ago > 24:
+            base_score *= 0.9  # 10% decay for 2+ years unused
+
+    # Convert to 0-100 scale
+    computed_score = min(100, base_score * 33)
+
+    return computed_score
+```
+
+### Aggregation Examples
+
+#### Example 1: Python with Strong Web, Weak ML
+
+```text
+Facets:
+  web_development: 3 (evidence: 4)
+  data_science: 2 (evidence: 2)
+  machine_learning: 1 (evidence: 1)
+  scripting: 3 (evidence: 3)
+
+Calculation:
+  weighted_sum = (3×4) + (2×2) + (1×1) + (3×3) = 12 + 4 + 1 + 9 = 26
+  total_weight = 4 + 2 + 1 + 3 = 10
+  base_score = 26 / 10 = 2.6
+
+  proficient_facets = 3 (web, data, scripting) → +0.3 bonus
+  has_expert_facet = true → ensure min 2.0
+
+  Final: base_score = min(3, 2.6 + 0.3) = 2.9
+  computed_score = 2.9 × 33 = 96
+```
+
+#### Example 2: Kubernetes with Limited Experience
+
+```text
+Facets:
+  deployment: 1 (evidence: 1)
+  networking: 0 (evidence: 0)
+  operations: 1 (evidence: 1)
+
+Calculation:
+  weighted_sum = (1×1) + (0×1) + (1×1) = 2
+  total_weight = 1 + 1 + 1 = 3
+  base_score = 2 / 3 = 0.67
+
+  proficient_facets = 0 → no bonus
+  has_expert_facet = false → no floor
+
+  Final: base_score = 0.67
+  computed_score = 0.67 × 33 = 22
+```
+
+### Facet-Aware Job Matching
+
+When matching against job requirements that specify sub-skills:
+
+```python
+def compute_match_score(user_skill, job_requirement):
+    """
+    Score skill match considering required facets.
+    Returns 0-100 match score.
+    """
+    required_facets = job_requirement.get('facets', [])
+    user_facets = user_skill['facets']
+
+    if not required_facets:
+        # Job doesn't specify facets: use computed_score
+        return user_skill['computed_score']
+
+    # Score each required facet
+    facet_scores = []
+    for req_facet in required_facets:
+        if req_facet in user_facets:
+            facet_conf = user_facets[req_facet]['confidence']
+            facet_scores.append(facet_conf * 33)
+        else:
+            # Missing facet: minimal credit
+            facet_scores.append(10)
+
+    return sum(facet_scores) / len(facet_scores)
+```
+
+#### Example: ML Engineer Role Matching
+
+```text
+Job requires: Python with facets [machine_learning, data_science]
+
+User Python:
+  computed_score: 78
+  facets:
+    machine_learning: 1
+    data_science: 2
+    web_development: 3
+
+Match calculation:
+  machine_learning: 1 × 33 = 33
+  data_science: 2 × 33 = 66
+
+  Average: (33 + 66) / 2 = 49.5
+
+Result: 49.5/100 match (despite overall score of 78)
+        This reveals the ML-specific gap.
+```
+
 ## Output Structure
 
 ### Skill Map JSON
@@ -252,7 +436,7 @@ Week 5-6: Polish and documentation
   "gaps": [
     {
       "skill": "Kubernetes",
-      "category": "infrastructure",
+      "facet": "deployment",
       "current_level": 1,
       "target_level": 3,
       "priority": "P0",
@@ -260,9 +444,21 @@ Week 5-6: Polish and documentation
       "effort_estimate": "medium",
       "timeline": "3-4 months",
       "status": "not_started",
+      "rationale": "Required by 80% of target jobs",
       "learning_path": {...},
       "resources": [...],
       "projects": [...]
+    },
+    {
+      "skill": "Kubernetes",
+      "facet": "networking",
+      "current_level": 0,
+      "target_level": 2,
+      "priority": "P0",
+      "effort_estimate": "medium",
+      "timeline": "2-3 months",
+      "status": "not_started",
+      "rationale": "Critical for infrastructure roles"
     }
   ],
   "recommended_focus": [

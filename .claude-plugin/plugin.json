@@ -4,5 +4,16 @@
   "description": "A comprehensive job search assistant for intelligent research, analysis, and career planning",
   "author": {
     "name": "Matt Repp"
-  }
+  },
+  "homepage": "https://github.com/Mrepp/job-search",
+  "repository": "https://github.com/Mrepp/job-search",
+  "license": "MIT",
+  "keywords": [
+    "job-search",
+    "career",
+    "resume",
+    "job-hunting",
+    "career-planning",
+    "skill-assessment"
+  ]
 }

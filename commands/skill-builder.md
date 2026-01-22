@@ -7,6 +7,7 @@ Map your skills, identify gaps, and create personalized improvement plans.
 ```
 /skill-builder
 /skill-builder [focus area]
+/skill-builder deep-dive [skill]
 ```
 
 ## Examples
@@ -16,6 +17,7 @@ Map your skills, identify gaps, and create personalized improvement plans.
 /skill-builder system design
 /skill-builder kubernetes
 /skill-builder leadership skills
+/skill-builder deep-dive python
 ```
 
 ## Description
@@ -27,7 +29,8 @@ This command analyzes your current skills against your career goals and saved jo
 ### 1. Load Profile and Career Data
 
 Gather:
-- `self/user.json` - Current skills with confidence levels
+
+- `self/user.json` - Current skill trees with facets
 - `career/career-tree.json` - Target positions and gaps
 - `career/skill-map.json` - Previous skill analysis (if exists)
 - `jobs/interested/*.md` - Saved job requirements
@@ -37,13 +40,13 @@ Gather:
 From saved jobs and target positions, build a requirements list:
 
 ```
-Required Skill        Frequency    Priority    Your Level
-Kubernetes            8/10 jobs    P0          1 (Basic)
-System Design         9/10 jobs    P0          2 (Proficient)
-Python                10/10 jobs   P0          3 (Expert)
-AWS                   7/10 jobs    P1          2 (Proficient)
-Leadership            5/10 jobs    P1          1 (Basic)
-Terraform             4/10 jobs    P2          0 (None)
+Required Skill        Frequency    Priority    Your Score
+Kubernetes            8/10 jobs    P0          22/100
+System Design         9/10 jobs    P0          66/100
+Python                10/10 jobs   P0          78/100
+AWS                   7/10 jobs    P1          55/100
+Leadership            5/10 jobs    P1          33/100
+Terraform             4/10 jobs    P2          0/100
 ```
 
 ### 3. Identify Gaps
@@ -74,27 +77,32 @@ Categorize gaps by priority:
 
 Build comprehensive skill visualization:
 
-**By Category:**
+**By Category (with facet breakdown):**
 ```
 Programming Languages:
-  ████████████████ Python (3/3) - Expert
-  ████████████░░░░ JavaScript (2/3) - Proficient
-  ████████░░░░░░░░ Go (1/3) - Basic
-  ░░░░░░░░░░░░░░░░ Rust (0/3) - None
+  Python (78/100)
+    ├─ web_development    ███████████████░ 3/3
+    ├─ data_science       ██████████░░░░░░ 2/3
+    └─ machine_learning   █████░░░░░░░░░░░ 1/3
+
+  JavaScript (55/100)
+    ├─ frontend           ███████████████░ 3/3
+    └─ backend            █████░░░░░░░░░░░ 1/3
 
 Infrastructure:
-  ████████████░░░░ AWS (2/3) - Proficient
-  ████████░░░░░░░░ Docker (1/3) - Basic
-  ░░░░░░░░░░░░░░░░ Kubernetes (0/3) - Gap!
+  Kubernetes (22/100) - Gap!
+    ├─ deployment         █████░░░░░░░░░░░ 1/3
+    ├─ networking         ░░░░░░░░░░░░░░░░ 0/3
+    └─ operations         ░░░░░░░░░░░░░░░░ 0/3
 ```
 
-**Gap Overlay:**
+**Facet Gap Overlay:**
 ```
-Skill               You    Target    Gap    Priority
-Kubernetes          0      2         2      P0
-System Design       2      3         1      P0
-Leadership          1      2         1      P1
-Terraform           0      2         2      P2
+Skill.Facet                  You    Target    Gap    Priority
+Kubernetes.deployment        1      3         2      P0
+Kubernetes.networking        0      2         2      P0
+Python.machine_learning      1      3         2      P0
+System Design.distributed    2      3         1      P1
 ```
 
 ### 5. Generate Learning Plans
@@ -161,8 +169,16 @@ Create/update `career/skill-map.json`:
   "profile_hash": "hash",
   "skill_inventory": {
     "programming_languages": [
-      {"name": "Python", "confidence": 3, "years": 5, "status": "current"},
-      {"name": "JavaScript", "confidence": 2, "years": 3, "status": "current"}
+      {
+        "name": "Python",
+        "computed_score": 78,
+        "years": 5,
+        "facets": {
+          "web_development": { "display": "Web Development", "level": 3 },
+          "data_science": { "display": "Data Science", "level": 2 },
+          "machine_learning": { "display": "Machine Learning", "level": 1 }
+        }
+      }
     ],
     "infrastructure": [...],
     "databases": [...],
@@ -172,12 +188,14 @@ Create/update `career/skill-map.json`:
   "gaps": [
     {
       "skill": "Kubernetes",
-      "current_level": 0,
-      "target_level": 2,
+      "facet": "deployment",
+      "current_level": 1,
+      "target_level": 3,
       "priority": "P0",
       "effort": "medium",
       "timeline": "2-3 months",
-      "status": "not_started"
+      "status": "not_started",
+      "rationale": "Required by 80% of target jobs"
     }
   ],
   "learning_plans": [
@@ -210,19 +228,19 @@ Based on match against your target roles
 
 ### Priority Gaps
 
-#### P0 - Critical (Address Now)
-1. **Kubernetes** - 0/3 → target 2/3
+#### P0 - Critical Facet Gaps
+1. **Kubernetes.deployment** - 1/3 → target 3/3
    Timeline: 2-3 months
    Top Resource: CKA Certification Path
 
-2. **System Design** - 2/3 → target 3/3
+2. **Python.machine_learning** - 1/3 → target 3/3
    Timeline: 3-4 months
-   Top Resource: "Designing Data-Intensive Applications"
+   Top Resource: "Hands-On ML with Scikit-Learn"
 
-#### P1 - Important (Next Quarter)
-3. **Leadership Skills** - 1/3 → target 2/3
+#### P1 - Important Facet Gaps
+3. **System Design.distributed** - 2/3 → target 3/3
    Timeline: Ongoing
-   Top Resource: Seek tech lead opportunities
+   Top Resource: "Designing Data-Intensive Applications"
 
 ### Recommended Project
 **Build a Distributed Task Queue**
@@ -255,10 +273,150 @@ When a focus area is specified:
 - Mentorship suggestions
 - Opportunities to seek
 
+## Deep-Dive Mode
+
+When invoked with `deep-dive [skill]`, provides detailed sub-skill (facet) analysis:
+
+### Deep-Dive Usage
+
+```
+/skill-builder deep-dive python
+/skill-builder deep-dive kubernetes
+/skill-builder deep-dive aws
+```
+
+### Deep-Dive Workflow
+
+1. **Load Skill Taxonomy**
+
+   Check `schemas/skill-taxonomy.schema.json` for predefined facets.
+   If skill not found, generate facets on-demand from context.
+
+2. **Present Facet Assessment**
+
+   Quick 5-question assessment for major facets:
+
+   ```
+   Let's map your Python expertise in detail.
+   Rate each area 1-3 (or 'skip' if unsure):
+
+   1. Web Development (Django, Flask, APIs): ___
+   2. Data Science (Pandas, NumPy, analysis): ___
+   3. Machine Learning (TensorFlow, PyTorch): ___
+   4. Scripting & Automation (CLI, pipelines): ___
+   5. DevOps & Tooling (pytest, packaging): ___
+   ```
+
+3. **Infer from Evidence**
+
+   Before asking, check existing evidence:
+   - Resume mentions
+   - Experience files in `self/experience/`
+   - Projects in `self/projects/`
+
+   Pre-fill confidence levels from evidence, ask user to confirm/adjust.
+
+4. **Generate Facet Map**
+
+   ```
+   Python Skill Tree
+   ═══════════════════════════════════════
+
+   Web Development        ███████████████░ 3/3 Expert
+     └─ Django, Flask, FastAPI, REST APIs
+
+   Data Science           ██████████░░░░░░ 2/3 Proficient
+     └─ Pandas, NumPy, Jupyter
+
+   Machine Learning       █████░░░░░░░░░░░ 1/3 Basic
+     └─ scikit-learn
+
+   Scripting/Automation   ███████████████░ 3/3 Expert
+     └─ Click, asyncio, pipelines
+
+   DevOps & Tooling       ██████████░░░░░░ 2/3 Proficient
+     └─ pytest, poetry, mypy
+
+   ═══════════════════════════════════════
+   Computed Score: 78/100
+   ```
+
+5. **Identify Facet Gaps**
+
+   Compare against job requirements that specify sub-skills:
+
+   ```
+   Facet Gap Analysis (vs. ML Engineer roles)
+   ───────────────────────────────────────
+
+   ⚠️  Machine Learning: You have 1, roles need 3
+       This is your critical gap for ML positions.
+
+   ⚠️  Data Science: You have 2, roles need 3
+       Important gap - strengthen analysis skills.
+
+   ✓  Web Development: Exceeds requirements
+   ✓  Scripting: Meets requirements
+   ```
+
+6. **Generate Targeted Learning Path**
+
+   Focus resources on weak facets:
+
+   ```
+   Priority: Strengthen Python ML Facet (1 → 3)
+
+   Phase 1: Foundations (2-3 weeks)
+   - Course: "Machine Learning A-Z" (Udemy)
+   - Book: "Hands-On ML with Scikit-Learn"
+
+   Phase 2: Deep Learning (4-6 weeks)
+   - Course: "Deep Learning Specialization" (Coursera)
+   - Framework: PyTorch or TensorFlow
+
+   Phase 3: Project (3-4 weeks)
+   - Build: ML-powered feature for existing project
+   - Goal: Production-quality ML pipeline
+   ```
+
+7. **Update Profile**
+
+   Save skill tree to user profile:
+
+   ```json
+   {
+     "name": "Python",
+     "years": 5,
+     "facets": {
+       "web_development": { "confidence": 3, "inferred": false },
+       "data_science": { "confidence": 2, "inferred": false },
+       "machine_learning": { "confidence": 1, "inferred": false }
+     },
+     "computed_score": 78
+   }
+   ```
+
+### Project-Based Inference
+
+Alternative to direct questions - ask about projects:
+
+```
+Tell me about a significant Python project you've worked on.
+What did you build and what technologies did you use?
+```
+
+From the response, infer facet levels:
+
+- "Built Django REST APIs" → web_development: 2-3
+- "Data pipeline with Pandas" → data_science: 2
+- "ML recommendation engine" → machine_learning: 2-3
+
 ## Progress Tracking
 
 The skill map tracks:
+
 - When skills were added
-- Confidence level changes over time
+- Facet level changes over time
 - Learning plan progress
 - Completed resources and projects
+- Evidence accumulated per facet
