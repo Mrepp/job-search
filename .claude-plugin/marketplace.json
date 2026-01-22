@@ -9,7 +9,10 @@
   "plugins": [
     {
       "name": "job-search",
-      "source": ".",
+      "source": {
+        "source": "github",
+        "repo": "Mrepp/job-search"
+      },
       "description": "A comprehensive job search assistant for intelligent research, analysis, and career planning",
       "version": "1.1.0",
       "category": "productivity",
